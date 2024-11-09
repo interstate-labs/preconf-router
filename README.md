@@ -3,7 +3,7 @@
 This is an open source preconfirmation router, this sits between the wallet and the various preconfirmation networks, it allows the wallet to request an inclusion or execution preconfirmation without having to think of the implementation details of the various preconfirmation networks.
 
 This currently connects to the following preconfirmation networks (a-z):
- - Bolt/Chainbound
+ - Bolt by Chainbound
  - EthGas (in progress)
  - Interstate
  - Luban (in progress)

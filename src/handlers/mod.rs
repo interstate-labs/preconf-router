@@ -53,7 +53,10 @@ pub async fn submit_preconfirmation(
     State(proposer_router): State<Arc<ProposerRouter>>,
     Json(request_params): Json<PreconfRequestParams>,
 ) -> Result<Json<SubmitResponse>, HandlerError>{
-    // validate reqeust params
+    // validate request params
+
+    // Strategies: 1) submit to first available 2) submit to all 3) submit to specific provider
+    // if no imput is provided, default to first available
 
     let client = Client::new();
     let genesis_time:u64 = proposer_router.config.holesky_genesis_time.as_ref().unwrap().parse().expect("Failed to convert u64");

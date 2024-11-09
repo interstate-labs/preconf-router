@@ -102,6 +102,6 @@ pub fn adapt_interstate() -> AdaptedResult {
     }
 }
 
-pub fn adapt_luban() -> AdaptedResult {}
+// pub fn adapt_luban() -> AdaptedResult {}
 
-pub fn adapt_ethgas() -> AdaptedResult {}
+// pub fn adapt_ethgas() -> AdaptedResult {}

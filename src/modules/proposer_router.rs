@@ -22,6 +22,7 @@ pub struct ProposerRouter {
     pub config: AppConfig,
     pub sidecars: Arc<Mutex<Vec<Sidecar>>>, // Updated to tokio::sync::Mutex
 }
+
 impl ProposerRouter {
     pub fn new(config: AppConfig, sidecars: Arc<Mutex<Vec<Sidecar>>>) -> Self {
         Self {

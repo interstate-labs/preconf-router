@@ -31,9 +31,9 @@ async fn main() {
     // Load config and create fetcher,router instance
     let config = AppConfig::from_env().expect("Failed to load configuration from environment");
     let fetcher = ProposerFetcher::new(config.clone(), Arc::clone(&sidecars));
-    let proposer_router: Arc<ProposerRouter> = Arc::new(ProposerRouter::new(config, Arc::clone(&sidecars)));
-
- let app = Router::new()
+    let proposer_router: Arc<ProposerRouter> = Arc::new(ProposerRouter::new(config.clone(), Arc::clone(&sidecars)));
+ 
+    let app = Router::new()
     .route("/api/v1/proposer", get(find_proposer_handler))
     .route(
         "/api/v1/submit",
@@ -48,7 +48,13 @@ async fn main() {
         fetcher.run(12).await; // Run with a 11-second interval. block times are 12 seconds
     });
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 8000));
+    let port = config.port
+        .expect("Holesky bolt gateway URL not set")
+        .parse()
+        .expect("Failed to parse port number");
+
+    let addr = SocketAddr::from(([127, 0, 0, 1], port));
+
     println!("listening on {}", addr);
     axum_server::bind(addr)
         .serve(app.into_make_service())

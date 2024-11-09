@@ -9,6 +9,7 @@ pub struct AppConfig {
     pub holesky_rpc: Option<String>,
     pub holesky_genesis_time: Option<String>,
     pub holesky_primev_bid_client_url: Option<String>,
+    pub port: Option<String>,
 }
 
 impl AppConfig {

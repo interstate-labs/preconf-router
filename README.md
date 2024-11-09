@@ -2,8 +2,16 @@
 
 This is an open source preconfirmation router, this sits between the wallet and the various preconfirmation networks, it allows the wallet to request an inclusion or execution preconfirmation without having to think of the implementation details of the various preconfirmation networks.
 
-![Preconfirmation Router Architecture](static/image.png)
+This currently connects to (a-z):
+ - Bolt
+ - EthGas
+ - Interstate
+ - Luban
+ - Primev
 
+If you would like to be included, please add a pull request!
+
+![Preconfirmation Router Architecture](static/image.png)
 
 - Ideally this router & all preconfirmation providers implement this spec eventually: https://www.notion.so/Pricing-Spec-for-Preconfirmations-13777b17f2e68064adacc0e4ee8a5353
 

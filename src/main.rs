@@ -30,7 +30,7 @@ async fn main() {
     // Load config and create fetcher,router instance
     let config = AppConfig::from_env().expect("Failed to load configuration from environment");
     let port = config.port.clone()  // Clone the Option<String> first
-        .expect("Holesky bolt gateway URL not set")
+        .expect("Failed to parse port number")
         .parse::<u16>()
         .expect("Failed to parse port number");
 

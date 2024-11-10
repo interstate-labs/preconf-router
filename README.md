@@ -8,7 +8,7 @@ This currently connects to the following preconfirmation networks (a-z):
  - Bolt by Chainbound
  - EthGas (in progress)
  - Interstate
- - Luban (in progress)
+ - Taiyi by Luban (in progress)
  - Primev
 
 If you would like to be included, please add a pull request!

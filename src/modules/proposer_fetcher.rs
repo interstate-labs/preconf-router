@@ -51,7 +51,7 @@ impl ProposerFetcher {
 
     // Fetch bolt proposers
     async fn get_bolt_proposers(&self) -> Result<Vec<Sidecar>, reqwest::Error> {
-        if let Some(url) = &self.config.holesky_bolt_gateway_url {
+        if let Some(url) = &self.config.holesky_bolt_url {
             let request_url = format!("{}/proposers/lookahead?activeOnly=true&futureOnly=true", url);
             debug!("sending request url:");
             debug!(request_url);
@@ -90,7 +90,7 @@ impl ProposerFetcher {
 
     // Fetch interstate proposers
     async fn get_interstate_proposers(&self) -> Result<Vec<Sidecar>, reqwest::Error> {
-        if let Some(url) = &self.config.holesky_interstate_gateway_url {
+        if let Some(url) = &self.config.holesky_interstate_url {
             match self
                 .client
                 .get(format!("{}/proposers/lookahead?activeOnly=true&futureOnly=true", url))
@@ -122,7 +122,7 @@ impl ProposerFetcher {
 
     // Fetch primev proposers
     async fn get_primev_proposers(&self) -> Result<Vec<Sidecar>, reqwest::Error> {
-        if let Some(url) = &self.config.holesky_primev_bid_client_url{
+        if let Some(url) = &self.config.holesky_primev_url{
             match self
                 .client
                 .get(format!("{}/v1/validator/get_validators", url))

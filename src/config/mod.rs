@@ -3,12 +3,19 @@ use config::ConfigError;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct AppConfig {
-    pub holesky_bolt_gateway_url: Option<String>,
-    pub holesky_interstate_gateway_url: Option<String>,
+    // Holesky
+    pub holesky_bolt_url: Option<String>,
+    pub holesky_primev_url: Option<String>, 
+    pub holesky_luban_url: Option<String>,
+    pub holesky_interstate_url: Option<String>,
     pub holesky_beacon_url: Option<String>,
     pub holesky_rpc: Option<String>,
     pub holesky_genesis_time: Option<String>,
-    pub holesky_primev_bid_client_url: Option<String>,
+    
+    // Mainnet
+    pub mainnet_interstate_url: Option<String>,
+
+    // Other
     pub port: Option<String>,
 }
 
@@ -17,13 +24,24 @@ impl AppConfig {
         dotenv::dotenv().ok(); // Load environment variables from `.env` file
 
         let config = config::Config::builder()
-            .set_default("holesky_bolt_gateway_url", None::<String>)?
-            .set_default("holesky_interstate_gateway_url", None::<String>)?
-            .set_default("holesky_beacon_url", None::<String>)?
-            .set_default("holesky_rpc", None::<String>)?
-            .set_default("holesky_genesis_time", None::<String>)?
-            .set_default("holesky_primev_bid_client_url", None::<String>)?
-            .add_source(config::Environment::default()) // Load from environment
+            // Holesky
+            .set_default("holesky_bolt_url", None::<String>)?
+            .set_default("holesky_primev_url", None::<String>)?
+            .set_default("holesky_luban_url", None::<String>)?
+            .set_default("holesky_interstate_url": Option<String>)?
+            .set_default("holesky_beacon_url": Option<String>)?
+
+            .set_default("holesky_rpc": Option<String>)?
+            .set_default("holesky_genesis_time": Option<String>)?
+            
+            // Mainnet
+            .set_default("mainnet_interstate_url": Option<String>)?
+            
+            // Other
+            .set_default("port": Option<String>)?
+
+            // Load from environment
+            .add_source(config::Environment::default()) 
             .build()?;
 
         // Deserialize into `AppConfig`

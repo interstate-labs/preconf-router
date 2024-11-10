@@ -16,7 +16,6 @@ If you would like to be included, please add a pull request!
 ![Preconfirmation Router Architecture](static/image.png)
 
 API Standards
-- We preconfirmation providers agree on a uniform UX to avoid fragmentation
 - Spec formalized during sequencing week:
      - https://www.notion.so/V2-Aligning-Preconfirmation-APIs-13677b17f2e680e1abcffb6c598ce37b
      - https://vaulted-mars-82e.notion.site/Based-Seq-API-Specification-5620443f82564259be19fc32c58e7023?pvs=4

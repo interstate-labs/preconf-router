@@ -1,6 +1,6 @@
 ## Preconfirmation Router
 
-This is an open source preconfirmation router, this sits between the wallet and the various preconfirmation networks, it allows the wallet to request an inclusion or execution preconfirmation without having to think of the implementation details of the various preconfirmation networks.
+This is an open source preconfirmation router, this sits between the wallet and the various preconfirmation networks, it allows the wallet to request an inclusion or execution preconfirmation without having to think of the implementation details of the underlying preconfirmation network.
 
 This repo is under active development & changing frequently.
 

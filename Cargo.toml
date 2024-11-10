@@ -1,5 +1,5 @@
 [package]
-name = "temp"
+name = "preconf-router"
 version = "0.1.0"
 edition = "2021"
 

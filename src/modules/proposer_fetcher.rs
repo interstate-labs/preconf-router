@@ -52,7 +52,7 @@ impl ProposerFetcher {
     // Fetch bolt proposers
     async fn get_bolt_proposers(&self) -> Result<Vec<Sidecar>, reqwest::Error> {
         if let Some(url) = &self.config.holesky_bolt_url {
-            let request_url = format!("{}/proposers/lookahead?activeOnly=true&futureOnly=true", url);
+            let request_url = format!("{}/proposers", url);
             debug!("sending request url:");
             debug!(request_url);
             match self

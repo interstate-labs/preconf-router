@@ -67,7 +67,7 @@ impl ProposerFetcher {
 
                     let bolt_sidecars: Vec<BoltSidecar> = serde_json::from_str(&response_text).unwrap_or_default();
                     debug!("Got {} bolt proposers", bolt_sidecars.len());
-                    debug!("This is the number of proposers in the current 32 slots. You can check if this is working properly by visiting: {}", config.holesky_bolt_url);
+                    debug!("This is the number of proposers in the current 32 slots. You can check if this is working properly by visiting: {}", &self.config.holesky_bolt_url);
         
                     Ok(bolt_sidecars.into_iter().map(|sidecar| Sidecar {
                         validator_index: sidecar.validator_index,
@@ -101,6 +101,7 @@ impl ProposerFetcher {
                 Ok(response) => {
                     let interstate_sidecars: Vec<InterstateSidecar> = response.json().await.unwrap_or_default();
                     debug!("Got {} interstate proposers", interstate_sidecars.len());
+                    debug!("This is the number of proposers in the current 32 slots. You can check if this is working properly by visiting: {}", &self.config.holesky_interstate_url);
         
                     Ok(interstate_sidecars.into_iter().map(|sidecar| Sidecar {
                         validator_index: sidecar.validator_index,

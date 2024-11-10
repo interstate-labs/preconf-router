@@ -118,6 +118,7 @@ async fn main() {
     .route("/api/v1/proposer", get(find_proposer_handler))
     .route("/api/v1/submit", post(submit_preconfirmation))
     // Add this new route
+    .route("/", get(stats_handler_holesky))
     .route("/holesky", get(stats_handler_holesky))
     .route("/mainnet", get(stats_handler_mainnet))
     .with_state(proposer_router);

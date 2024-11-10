@@ -1,9 +1,10 @@
 use axum::{debug_handler, extract::State, http::StatusCode, Json};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use std::sync::Arc;
 use reqwest::{Client, Error as ReqwestError};
+use crate::modules::validator::ValidatedBody;
 use crate::ProposerRouter;
-use crate::modules::adaptor::{handle_adapter, PreconfRequestParams};
+use crate::modules::adaptor::handle_adapter;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -40,28 +41,16 @@ pub async fn find_proposer_handler(
     }
 }
 
-#[derive(Deserialize)]
-pub struct Proposer {
-    pub slot: u64,
-    pub validator_index: u64,
-    pub sidecar_url: String,
-    pub source: String,
-}
-
-#[debug_handler]
+#[axum::debug_handler]
 pub async fn submit_preconfirmation(
     State(proposer_router): State<Arc<ProposerRouter>>,
-    Json(request_params): Json<PreconfRequestParams>,
+    ValidatedBody(body): ValidatedBody,
 ) -> Result<Json<SubmitResponse>, HandlerError>{
-    // validate request params
-
-    // Strategies: 1) submit to first available 2) submit to all 3) submit to specific provider
-    // if no imput is provided, default to first available
-
+    
     let client = Client::new();
     let genesis_time:u64 = proposer_router.config.holesky_genesis_time.as_ref().unwrap().parse().expect("Failed to convert u64");
     // Handle adapter to get URL, body, and headers
-    let adapted =  handle_adapter(request_params, genesis_time);
+    let adapted =  handle_adapter(body, genesis_time);
 
     // Send preconfirmation request
     match client.post(adapted.url)
@@ -75,9 +64,10 @@ pub async fn submit_preconfirmation(
             Ok(Json(SubmitResponse{message:true}))
         },
         Err(_e) => {
-           Err(HandlerError::UnexpectedError("Unexpected Error in submitting preconf".to_string()))
+            Err(HandlerError::UnexpectedError("Unexpected Error in submitting preconf".to_string()))
         },
     }
+    
 }
 
 #[derive(Serialize)]

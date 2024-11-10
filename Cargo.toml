@@ -17,3 +17,10 @@ tracing-subscriber = "0.3.18"
 thiserror = "2.0.0"
 tower = "0.5.1"
 futures-util = "0.3.31"
+validator = "0.19.0"
+
+# alloy
+alloy = { version = "0.2.0", features = ["full", "provider-trace-api", "rpc-types-beacon", "rpc-types-engine"] }
+
+# reth
+reth-primitives = { git = "https://github.com/paradigmxyz/reth", rev = "f55d43c" }

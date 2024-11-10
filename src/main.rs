@@ -13,7 +13,6 @@ mod modules;
 use modules::{proposer_fetcher::ProposerFetcher,proposer_router::ProposerRouter};
 
 use config::AppConfig;
-use modules::validator::{ValidatorLayer};
 
 #[tokio::main]
 async fn main() {
@@ -30,28 +29,23 @@ async fn main() {
 
     // Load config and create fetcher,router instance
     let config = AppConfig::from_env().expect("Failed to load configuration from environment");
+    let port = config.port.clone()  // Clone the Option<String> first
+        .expect("Holesky bolt gateway URL not set")
+        .parse::<u16>()
+        .expect("Failed to parse port number");
+
     let fetcher = ProposerFetcher::new(config.clone(), Arc::clone(&sidecars));
-    let proposer_router: Arc<ProposerRouter> = Arc::new(ProposerRouter::new(config.clone(), Arc::clone(&sidecars)));
- 
-    let app = Router::new()
+    let proposer_router: Arc<ProposerRouter> = Arc::new(ProposerRouter::new(config, Arc::clone(&sidecars)));
+
+ let app = Router::new()
     .route("/api/v1/proposer", get(find_proposer_handler))
-    .route(
-        "/api/v1/submit",
-        post(submit_preconfirmation).layer(ValidatorLayer {
-            proposer_router: proposer_router.clone(),
-        }),
-    )
+    .route("/api/v1/submit", post(submit_preconfirmation))
     .with_state(proposer_router);
     
     // Run ProposerFetcher in a separate task
     tokio::spawn(async move {
-        fetcher.run(12).await; // Run with a 11-second interval. block times are 12 seconds
+        fetcher.run(12).await; // Run with a 30-second interval
     });
-
-    let port = config.port
-        .expect("Holesky bolt gateway URL not set")
-        .parse()
-        .expect("Failed to parse port number");
 
     let addr = SocketAddr::from(([127, 0, 0, 1], port));
 

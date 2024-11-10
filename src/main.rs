@@ -106,7 +106,7 @@ async fn main() {
 
     // Load config and create fetcher,router instance
     let config = AppConfig::from_env().expect("Failed to load configuration from environment");
-    let port = config.port.clone()  // Clone the Option<String> first
+    let port = config.port.clone()  // Use lowercase 'port' instead of 'PORT'
         .expect("Failed to parse port number")
         .parse::<u16>()
         .expect("Failed to parse port number");

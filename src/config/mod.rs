@@ -38,7 +38,7 @@ impl AppConfig {
             .set_default("mainnet_interstate_url", None::<String>)?
             
             // Other
-            .set_default("port", None::<String>)?
+            .set_default("PORT", None::<String>)?
 
             // Load from environment
             .add_source(config::Environment::default()) 

@@ -2885,6 +2885,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "preconf-router"
+version = "0.1.0"
+dependencies = [
+ "alloy",
+ "axum",
+ "axum-server",
+ "config",
+ "dotenv",
+ "futures-util",
+ "reqwest",
+ "reth-primitives",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.0",
+ "tokio",
+ "tower 0.5.1",
+ "tracing",
+ "tracing-subscriber",
+ "validator",
+]
+
+[[package]]
 name = "primitive-types"
 version = "0.12.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3954,28 +3976,6 @@ name = "tap"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
-
-[[package]]
-name = "temp"
-version = "0.1.0"
-dependencies = [
- "alloy",
- "axum",
- "axum-server",
- "config",
- "dotenv",
- "futures-util",
- "reqwest",
- "reth-primitives",
- "serde",
- "serde_json",
- "thiserror 2.0.0",
- "tokio",
- "tower 0.5.1",
- "tracing",
- "tracing-subscriber",
- "validator",
-]
 
 [[package]]
 name = "tempfile"

@@ -62,11 +62,12 @@ impl ProposerFetcher {
                 .await
             {
                 Ok(response) => {
-                    // let response_text = response.text().await?;
+                    let response_text = response.text().await?;
                     // debug!("Bolt response: {}", response_text);
 
                     let bolt_sidecars: Vec<BoltSidecar> = serde_json::from_str(&response_text).unwrap_or_default();
                     debug!("Got {} bolt proposers", bolt_sidecars.len());
+                    debug!("This is the number of proposers in the current 32 slots. You can check if this is working properly by visiting: {}", config.holesky_bolt_url);
         
                     Ok(bolt_sidecars.into_iter().map(|sidecar| Sidecar {
                         validator_index: sidecar.validator_index,

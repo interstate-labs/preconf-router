@@ -65,7 +65,7 @@
                 <thead>
                     <tr>
                         <!-- <th>Type</th> enable to show which network proposers is under, not every network is on holesky rn--> 
-                        <th>Aggregated</th>
+                        <th>Type</th>
                         <th>Slot</th>
                         <th>Validator Index</th>
                         <th>URL</th>
@@ -74,7 +74,7 @@
                 <tbody>
                     {% for proposer in bolt_proposers %}
                     <tr class="bolt">
-                        <td>Bolt</td>
+                        <td>Agg</td>
                         <td>{{ proposer.slot }}</td>
                         <td>{{ proposer.validator_index }}</td>
                         <td>{{ proposer.sidecar_url }}</td>
@@ -82,7 +82,7 @@
                     {% endfor %}
                     {% for proposer in interstate_proposers %}
                     <tr class="interstate">
-                        <td>Interstate</td>
+                        <td>Agg</td>
                         <td>{{ proposer.slot }}</td>
                         <td>{{ proposer.validator_index }}</td>
                         <td>{{ proposer.sidecar_url }}</td>

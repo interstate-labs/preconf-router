@@ -12,6 +12,7 @@ mod modules;
 use axum::extract::State;
 use axum::response::Html;
 use askama::Template;
+use chrono::Local;  // Add this to your imports at the top
 
 
 use modules::{proposer_fetcher::ProposerFetcher,proposer_router::ProposerRouter};
@@ -24,6 +25,7 @@ struct ProposerStatsTemplateHolesky {
     bolt_proposers: Vec<Sidecar>,
     interstate_proposers: Vec<Sidecar>,
     current_slot: String,
+    timestamp: String,
 }
 
 #[derive(Template)]
@@ -32,9 +34,12 @@ struct ProposerStatsTemplateMainnet {
     bolt_proposers: Vec<Sidecar>,
     interstate_proposers: Vec<Sidecar>,
     current_slot: String,
+    timestamp: String,
 }
 
 async fn stats_handler_holesky(State(proposer_router): State<Arc<ProposerRouter>>) -> Html<String> {
+    let timestamp = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+
     let sidecars = proposer_router.as_ref().get_sidecars().await;
     
     // Split and sort proposers by source
@@ -57,6 +62,7 @@ async fn stats_handler_holesky(State(proposer_router): State<Arc<ProposerRouter>
         bolt_proposers,
         interstate_proposers,
         current_slot,
+        timestamp,
     };
     
     Html(template.render().unwrap_or_else(|_| String::from("Error rendering template")))
@@ -64,6 +70,8 @@ async fn stats_handler_holesky(State(proposer_router): State<Arc<ProposerRouter>
 
 
 async fn stats_handler_mainnet(State(proposer_router): State<Arc<ProposerRouter>>) -> Html<String> {
+    let timestamp = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+
     let sidecars = proposer_router.as_ref().get_sidecars().await;
     
     // Split and sort proposers by source
@@ -86,6 +94,7 @@ async fn stats_handler_mainnet(State(proposer_router): State<Arc<ProposerRouter>
         bolt_proposers,
         interstate_proposers,
         current_slot,
+        timestamp,
     };
     
     Html(template.render().unwrap_or_else(|_| String::from("Error rendering template")))

@@ -1,8 +1,8 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Proposer Statistics</title>
-    <meta http-equiv="refresh" content="12">
+    <meta http-equiv="refresh" content="5">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,14 +57,15 @@
             <a href="https://dashboard.interstate.so/mainnet" style="margin-right: 20px;">Mainnet</a>
             <a href="https://dashboard.interstate.so/holesky">Holesky</a>
         </div>    
-        <h2>Current Slot: <span class="count">{{ current_slot }}</span></h2>
-        <h2>Total Proposers | Counting Bolt, Interstate, Luban, Primev, EthGas<span class="count">({{ bolt_proposers.len() + interstate_proposers.len() }})</span></h2>
+        <h2>Available Aggregated Proposers || Last Updated: <span class="count">{{ timestamp }}</span></h2>
+        <h2>Total Proposers <span class="count">({{ bolt_proposers.len() + interstate_proposers.len()}})</span></h2>
         
         <div class="proposer-section">
             <table>
                 <thead>
                     <tr>
-                        <th>Type</th>
+                        <!-- <th>Type</th> enable to show which network proposers is under, not every network is on holesky rn--> 
+                        <th>Aggregated</th>
                         <th>Slot</th>
                         <th>Validator Index</th>
                         <th>URL</th>

@@ -13,7 +13,7 @@ This currently connects to the following preconfirmation networks (a-z):
 
 If you would like to be included, please add a pull request!
 
-![Preconfirmation Router Architecture](static/image.png)
+![Preconfirmation Router Architecture](static/image2.png)
 
 API Standards
 - Spec formalized during sequencing week:

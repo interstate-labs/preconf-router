@@ -51,23 +51,16 @@ impl ProposerFetcher {
 
     // Fetch bolt proposers
     async fn get_bolt_proposers(&self) -> Result<Vec<Sidecar>, reqwest::Error> {
-        if let Some(url) = &self.config.holesky_bolt_url {
-            let request_url = format!("{}/proposers/lookahead?activeOnly=true&futureOnly=true", url);
-            debug!("sending request url:");
-            debug!(request_url);
+        if let Some(url) = &self.config.holesky_bolt_gateway_url {
             match self
                 .client
-                .get(request_url)
+                .get(format!("{}/proposers/lookahead?activeOnly=true&futureOnly=true", url))
                 .send()
                 .await
             {
                 Ok(response) => {
-                    let response_text = response.text().await?;
-                    // debug!("Bolt response: {}", response_text);
-
-                    let bolt_sidecars: Vec<BoltSidecar> = serde_json::from_str(&response_text).unwrap_or_default();
+                    let bolt_sidecars: Vec<BoltSidecar> = response.json().await.unwrap_or_default();
                     debug!("Got {} bolt proposers", bolt_sidecars.len());
-                    debug!("This is the number of proposers in the current 32 slots. You can check if this is working properly by visiting: {:?}", &self.config.holesky_bolt_url);
         
                     Ok(bolt_sidecars.into_iter().map(|sidecar| Sidecar {
                         validator_index: sidecar.validator_index,
@@ -91,17 +84,16 @@ impl ProposerFetcher {
 
     // Fetch interstate proposers
     async fn get_interstate_proposers(&self) -> Result<Vec<Sidecar>, reqwest::Error> {
-        if let Some(url) = &self.config.holesky_interstate_url {
+        if let Some(url) = &self.config.holesky_interstate_gateway_url {
             match self
                 .client
-                .get(format!("{}/proposers", url))
+                .get(format!("{}/proposers/lookahead?activeOnly=true&futureOnly=true", url))
                 .send()
                 .await
             {
                 Ok(response) => {
                     let interstate_sidecars: Vec<InterstateSidecar> = response.json().await.unwrap_or_default();
                     debug!("Got {} interstate proposers", interstate_sidecars.len());
-                    debug!("This is the number of proposers in the current 32 slots. You can check if this is working properly by visiting: {:?}", &self.config.holesky_interstate_url);
         
                     Ok(interstate_sidecars.into_iter().map(|sidecar| Sidecar {
                         validator_index: sidecar.validator_index,
@@ -124,7 +116,7 @@ impl ProposerFetcher {
 
     // Fetch primev proposers
     async fn get_primev_proposers(&self) -> Result<Vec<Sidecar>, reqwest::Error> {
-        if let Some(url) = &self.config.holesky_primev_url{
+        if let Some(url) = &self.config.holesky_primev_bid_client_url{
             match self
                 .client
                 .get(format!("{}/v1/validator/get_validators", url))

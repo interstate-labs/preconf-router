@@ -41,7 +41,7 @@ pub async fn find_proposer_handler(
     }
 }
 
-#[axum::debug_handler]
+#[debug_handler]
 pub async fn submit_preconfirmation(
     State(proposer_router): State<Arc<ProposerRouter>>,
     ValidatedBody(body): ValidatedBody,

@@ -72,6 +72,7 @@ where
 {
     let s = String::deserialize(deserializer)?;
     let data = hex::decode(s.trim_start_matches("0x")).map_err(de::Error::custom)?;
+    tracing::debug!("in deserialization {}", s);
     PooledTransactionsElement::decode_enveloped(&mut data.as_slice()).map_err(de::Error::custom)
 }
 
@@ -84,6 +85,7 @@ where
 {
     let mut data = Vec::new();
     tx.encode_enveloped(&mut data);
+    tracing::debug!("in serialization 0x{:#?}", data);
     serializer.serialize_str(&format!("0x{}", hex::encode(&data)))
 }
 

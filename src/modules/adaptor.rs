@@ -1,6 +1,8 @@
 use axum::http::HeaderMap;
 use crate::spec::PreconfRequestParams;
 use alloy::hex;
+use chrono::Utc;
+
 #[derive(Debug)]
 pub struct AdaptedResult {
     pub headers: HeaderMap,
@@ -46,23 +48,28 @@ pub fn adapt_bolt(params: &PreconfRequestParams) -> AdaptedResult {
 
 pub fn adapt_primev(params: &PreconfRequestParams, genesis_time: u64) -> AdaptedResult {
     let holesky_genesis_time = genesis_time;
-    let decay_start_timestamp = (holesky_genesis_time + params.proposer.slot * 12) * 1000;
-    let decay_end_timestamp = decay_start_timestamp + 500;
+    let decay_end_timestamp = (holesky_genesis_time + params.proposer.slot * 12) * 1000;
+    let decay_start_timestamp = Utc::now().timestamp_millis();
 
     let mut headers = HeaderMap::new();
     headers.insert(
         "Content-Type",
         "application/json".parse().unwrap(),
     );
+    let mut data = Vec::new();
+    params.signed_tx.encode_enveloped(&mut data);
+    let tx = format!("0x{}", hex::encode(&data));
 
     let body = serde_json::json!({
-        "rawTransactions": [params.signed_tx],
+        "rawTransactions": [tx],
         "amount": "100000040",
         "blockNumber": params.proposer.slot,
         "decayStartTimestamp": decay_start_timestamp,
         "decayEndTimestamp": decay_end_timestamp,
         "revertingTxHashes": []
     });
+
+    tracing::debug!("body: {:#?}", body);
 
     AdaptedResult {
         headers,
@@ -94,7 +101,3 @@ pub fn adapt_interstate(params: &PreconfRequestParams) -> AdaptedResult {
         url: params.proposer.sidecar_url.clone(),
     }
 }
-
-// pub fn adapt_luban() -> AdaptedResult {}
-
-// pub fn adapt_ethgas() -> AdaptedResult {}

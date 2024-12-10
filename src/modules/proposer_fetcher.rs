@@ -54,7 +54,7 @@ impl ProposerFetcher {
         if let Some(url) = &self.config.holesky_bolt_gateway_url {
             match self
                 .client
-                .get(format!("{}/proposers/lookahead?activeOnly=true&futureOnly=true", url))
+                .get(format!("{}/api/v1/proposers/lookahead?activeOnly=true&futureOnly=true", url))
                 .send()
                 .await
             {

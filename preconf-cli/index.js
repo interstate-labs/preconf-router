@@ -59,12 +59,11 @@ async function run(options) {
 
 
 async function send_preconf_to_interstate_sidecar() {
-  
   const chainId = 3151908;
   const wallet = await getWallet("devnet", "5d2344259f42259f82d2c140aa66102ba89b57b4883ee441a8b312622bd42491");
   let nonce = await wallet.getNonce();
 
-  await sendPreconfirmationToInterstateSidecar(wallet, nonce, chainId);
+  await sendPreconfirmationToInterstateSidecar(wallet,  nonce, chainId);
 }
 
 main()

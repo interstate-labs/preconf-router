@@ -105,12 +105,16 @@ export async function sendPreconfirmationToInterstateSidecar(
   wallet,
   nonce,
   chainId,
-){
-  // Define the transaction
+){ 
+  const { data } = await axios.get(`${process.env.DEVNET_BEACON_RPC}/eth/v1/beacon/headers`);
+  const slot = Number(data.data[0].header.message.slot) + 10;
   const sender = await wallet.getAddress();
+
+  let nextNonce = nonce
+  // Define the transaction
+  
   const tx = {
     chainId: chainId,
-    nonce: nonce,
     from: sender,
     to: "0xdeaDDeADDEaDdeaDdEAddEADDEAdDeadDEADDEaD",
     value: ethers.parseEther("0.0048560"),
@@ -118,19 +122,25 @@ export async function sendPreconfirmationToInterstateSidecar(
     maxPriorityFeePerGas: ethers.parseUnits("40", "gwei"),
     data: "0xdeadbeef",
   };
+  await sendPreconfTx(tx, nextNonce, slot, wallet, process.env.SIDECAR_URL1);
+  await sendPreconfTx(tx, ++nextNonce, slot, wallet, process.env.SIDECAR_URL2);
+}
+
+async function sendPreconfTx(tx, nonce, slot, wallet, url) {
+  console.log('nonce', nonce, url);
+  tx.nonce = nonce
   const estimatedGas = await wallet.estimateGas(tx);
   tx.gasLimit = estimatedGas;
 
   const populated = await wallet.populateCall(tx);
   const signedTx = await wallet.signTransaction(populated);
 
-  // Calculate the target slot.
-  const { data } = await axios.get(`${process.env.DEVNET_BEACON_RPC}/eth/v1/beacon/headers`);
-  const slot = Number(data.data[0].header.message.slot) + 6;
   const txHash = keccak256(signedTx);
 
+  const sender = await wallet.getAddress();
+  console.log('sending')
   await axios.post(
-    `${process.env.SIDECAR_URL}/api/v1/preconfirmation`,
+    `${url}/api/v1/preconfirmation`,
     {
       tx:signedTx,
       slot,
@@ -138,8 +148,7 @@ export async function sendPreconfirmationToInterstateSidecar(
     }
   );
 
-  console.log(`sent preconfirmation tx: ${txHash} at slot ${slot}`)
-
+  console.log(`sent preconfirmation tx: ${txHash} at slot ${slot} at nonce ${nonce}`)
 }
 
 export async function getProposer(){

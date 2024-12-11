@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  preconf-router:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - RUST_LOG=debug
+    env_file:
+      - .env
+    restart: unless-stopped

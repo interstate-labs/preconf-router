@@ -36,9 +36,10 @@ impl PreconfRequestParams {
 
 #[derive(Debug, Deserialize)]
 pub struct BoltSidecar {
-    pub validator_index: u32,
-    pub sidecar_url: String,
     pub slot: u64,
+    pub validator_index: u32,
+    pub validator_pubkey: String,
+    pub sidecar_url: String,
 }
 
 #[derive(Debug, Deserialize)]

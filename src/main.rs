@@ -1,13 +1,15 @@
 use axum::{
     response::{Html, IntoResponse, Redirect}, // Add these
-    routing::{get, post},
+    routing::{get, get_service, post},
     Router,
+    ServiceExt,
 };
 use handlers::{find_proposer_handler, submit_preconfirmation};
+use reqwest::StatusCode;
 use spec::Sidecar;
-use std::fs; // Add this line
 use std::net::SocketAddr;
 use std::sync::Arc;
+use std::{fs, path::Path}; // Add this line
 use tokio::sync::Mutex;
 use tracing_subscriber::fmt::Subscriber;
 mod config;
@@ -16,6 +18,7 @@ mod modules;
 mod spec;
 
 use modules::{proposer_fetcher::ProposerFetcher, proposer_router::ProposerRouter};
+use tower_http::services::ServeDir;
 
 use config::AppConfig;
 
@@ -43,6 +46,16 @@ async fn main() {
         .route("/api/v1/proposer", get(find_proposer_handler))
         .route("/api/v1/submit", post(submit_preconfirmation))
         .with_state(proposer_router);
+    let app = app.nest_service(
+        "/dashboard",
+        ServeDir::new(
+            std::env::current_dir()
+                .unwrap()
+                .join(Path::new("dashboard/build"))
+                .to_str()
+                .unwrap(),
+        ),
+    );
 
     async fn root_handler() -> impl IntoResponse {
         axum::response::Redirect::to("/holesky")

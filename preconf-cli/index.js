@@ -4,7 +4,7 @@
 // import list from './commands/list'
 import { ethers } from "ethers";
 import { Command } from 'commander';
-import { getProposer, getWallet, sendPreconfirmation, sleep, sendPreconfirmationToInterstateSidecar } from './lib/index.js';
+import { getProposer, getWallet, sendPreconfirmation, sleep, sendPreconfirmationToInterstateSidecar, sendPreconfirmationToInterstateGateway } from './lib/index.js';
 
 const program = new Command();
 
@@ -20,6 +20,11 @@ async function main() {
     .command('send_interstate_sidecar')
     .description("My Node CLI")
     .action(send_preconf_to_interstate_sidecar);
+
+  program
+  .command('send_interstate_gateway')
+  .description("My Node CLI")
+  .action(send_preconf_to_interstate_gateway);  
   await program.parseAsync(process.argv);
 }
 
@@ -64,6 +69,14 @@ async function send_preconf_to_interstate_sidecar() {
   let nonce = await wallet.getNonce();
 
   await sendPreconfirmationToInterstateSidecar(wallet,  nonce, chainId);
+}
+
+async function send_preconf_to_interstate_gateway() {
+  const chainId = 3151908;
+  const wallet = await getWallet("devnet", "5d2344259f42259f82d2c140aa66102ba89b57b4883ee441a8b312622bd42491");
+  let nonce = await wallet.getNonce();
+
+  await sendPreconfirmationToInterstateGateway(wallet,  nonce, chainId);
 }
 
 main()

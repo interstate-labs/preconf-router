@@ -107,12 +107,14 @@ export async function sendPreconfirmationToInterstateSidecar(
   chainId,
 ){ 
   const { data } = await axios.get(`${process.env.DEVNET_BEACON_RPC}/eth/v1/beacon/headers`);
-  const slot = Number(data.data[0].header.message.slot) + 10;
+  const slot = Number(data.data[0].header.message.slot) + 4;
+  const slot1 = Number(data.data[0].header.message.slot) + 8;
+
   const sender = await wallet.getAddress();
 
   let nextNonce = nonce
+
   // Define the transaction
-  
   const tx = {
     chainId: chainId,
     from: sender,
@@ -122,8 +124,65 @@ export async function sendPreconfirmationToInterstateSidecar(
     maxPriorityFeePerGas: ethers.parseUnits("40", "gwei"),
     data: "0xdeadbeef",
   };
+  
+  // Define the transaction
+  const tx1 = {
+    chainId: chainId,
+    from: sender,
+    to: "0x8aC112a5540f441cC9beBcC647041A6E0D595B94",
+    value: ethers.parseEther("0.0048560"),
+    maxFeePerGas: ethers.parseUnits("300", "gwei"),
+    maxPriorityFeePerGas: ethers.parseUnits("40", "gwei"),
+    data: "0xbeefdead",
+  };
   await sendPreconfTx(tx, nextNonce, slot, wallet, process.env.SIDECAR_URL1);
-  await sendPreconfTx(tx, ++nextNonce, slot, wallet, process.env.SIDECAR_URL2);
+  // await sendPreconfTx(tx1, ++nextNonce, slot, wallet, process.env.SIDECAR_URL2);
+
+  // await sendPreconfTx(tx, ++nextNonce, slot1, wallet, process.env.SIDECAR_URL1);
+  // await sendPreconfTx(tx1, ++nextNonce, slot1, wallet, process.env.SIDECAR_URL2);
+}
+
+
+export async function sendPreconfirmationToInterstateGateway(
+  wallet,
+  nonce,
+  chainId,
+){ 
+  const { data } = await axios.get(`${process.env.DEVNET_BEACON_RPC}/eth/v1/beacon/headers`);
+  const slot = Number(data.data[0].header.message.slot) + 10;
+  const sender = await wallet.getAddress();
+
+  // Define the transaction
+  const tx = {
+    nonce,
+    chainId: chainId,
+    from: sender,
+    to: "0xdeaDDeADDEaDdeaDdEAddEADDEAdDeadDEADDEaD",
+    value: ethers.parseEther("0.0048560"),
+    maxFeePerGas: ethers.parseUnits("300", "gwei"),
+    maxPriorityFeePerGas: ethers.parseUnits("40", "gwei"),
+    data: "0xdeadbeef",
+  };
+
+  const estimatedGas = await wallet.estimateGas(tx);
+  tx.gasLimit = estimatedGas;
+
+  const populated = await wallet.populateCall(tx);
+  const signedTx = await wallet.signTransaction(populated);
+
+  const txHash = keccak256(signedTx);
+
+  const {data:dataRes} = await axios.post(
+    `${process.env.INTERSTATE_GATEWAY}/api/v1/send_preconf`,
+    {
+      tx:signedTx,
+      sender
+    }
+  );
+
+  console.log('data' , dataRes)
+
+  console.log(`sent preconfirmation tx: ${txHash} at slot ${dataRes.slot} at nonce ${nonce}`)
 }
 
 async function sendPreconfTx(tx, nonce, slot, wallet, url) {
@@ -143,8 +202,8 @@ async function sendPreconfTx(tx, nonce, slot, wallet, url) {
     `${url}/api/v1/preconfirmation`,
     {
       tx:signedTx,
-      slot,
-      sender
+      sender,
+      slot
     }
   );
 

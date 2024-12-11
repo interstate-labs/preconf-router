@@ -42,7 +42,8 @@ async fn main() {
         fetcher.run(12).await; // Run with a 30-second interval
     });
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 8000));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 8000));
+    
     println!("listening on {}", addr);
     axum_server::bind(addr)
         .serve(app.into_make_service())

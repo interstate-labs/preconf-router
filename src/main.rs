@@ -1,4 +1,9 @@
-use axum::{ routing::{get, post}, Router };
+use axum::{ 
+    routing::{get, post}, 
+    Router,
+    response::{Html, IntoResponse, Redirect} // Add these
+};
+use std::fs;  // Add this line
 use handlers::{find_proposer_handler, submit_preconfirmation};
 use spec::Sidecar;
 use std::net::SocketAddr;
@@ -32,18 +37,41 @@ async fn main() {
     let fetcher = ProposerFetcher::new(config.clone(), Arc::clone(&sidecars));
     let proposer_router: Arc<ProposerRouter> = Arc::new(ProposerRouter::new(config, Arc::clone(&sidecars)));
 
- let app = Router::new()
-    .route("/api/v1/proposer", get(find_proposer_handler))
-    .route("/api/v1/submit", post(submit_preconfirmation))
-    .with_state(proposer_router);
+    let app = Router::new()
+        .route("/", get(root_handler))
+        .route("/mainnet", get(mainnet_handler))
+        .route("/holesky", get(holesky_handler))
+        .route("/api/v1/proposer", get(find_proposer_handler))
+        .route("/api/v1/submit", post(submit_preconfirmation))
+        .with_state(proposer_router);
+
+        async fn root_handler() -> impl IntoResponse {
+            axum::response::Redirect::to("/holesky")
+        }    
+        
+        async fn mainnet_handler() -> impl IntoResponse {
+            let content = fs::read_to_string("templates/mainnet.html")
+                .map(Html)
+                .unwrap_or_else(|_| Html("Error loading mainnet template".to_string()));
+            content
+        }
     
+        
+        async fn holesky_handler() -> impl IntoResponse {
+            let content = fs::read_to_string("templates/holesky.html")
+                .map(Html)
+                .unwrap_or_else(|_| Html("Error loading holesky template".to_string()));
+            content 
+        }
+    
+
     // Run ProposerFetcher in a separate task
     tokio::spawn(async move {
         fetcher.run(12).await; // Run with a 30-second interval
     });
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 8000));
-    
+
     println!("listening on {}", addr);
     axum_server::bind(addr)
         .serve(app.into_make_service())

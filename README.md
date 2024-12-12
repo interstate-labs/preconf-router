@@ -1,4 +1,5 @@
 ## Preconfirmation Router
+- To send a preconf request, read the docs in the preconf-cli folder
 
 This is an open source preconfirmation router, this sits between the preconf sender (which is usually a wallet, L2, or app) and the various preconfirmation networks, it allows the wallet to request an inclusion or execution preconfirmation without having to think of the implementation details of the various preconfirmation networks.
 

@@ -52,22 +52,21 @@ pub async fn submit_preconfirmation(
     // Handle adapter to get URL, body, and headers
     let adapted =  handle_adapter(body, genesis_time);
 
-    // Send preconfirmation request
-    match client.post(adapted.url)
-        .json(&adapted.body)
-        .headers(adapted.headers)
-        .send()
-        .await
-    {
-        Ok(_) => {
-            tracing::info!("Preconfirmation sent successfully");
-            Ok(Json(SubmitResponse{message:true}))
-        },
-        Err(_e) => {
-            Err(HandlerError::UnexpectedError("Unexpected Error in submitting preconf".to_string()))
-        },
-    }
-    
+    let response = client.post(adapted.url)
+    .json(&adapted.body)
+    .headers(adapted.headers)
+    .send()
+    .await
+    .map_err(|e| {
+        tracing::error!(?e, "failed to submit preconfirmation");
+        HandlerError::UnexpectedError("Unexpected Error in submitting preconf".to_string())
+    })?;
+
+    let response = response.text().await?;
+
+    let response = response.replace(&"0".repeat(32), ".").replace(&".".repeat(4), "");
+    tracing::info!("Response: {:?}", response);
+    Ok(Json(SubmitResponse{message:true}))
 }
 
 #[derive(Serialize)]

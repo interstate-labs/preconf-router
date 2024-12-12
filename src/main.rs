@@ -46,16 +46,6 @@ async fn main() {
         .route("/api/v1/proposer", get(find_proposer_handler))
         .route("/api/v1/submit", post(submit_preconfirmation))
         .with_state(proposer_router);
-    let app = app.nest_service(
-        "/dashboard",
-        ServeDir::new(
-            std::env::current_dir()
-                .unwrap()
-                .join(Path::new("dashboard/build"))
-                .to_str()
-                .unwrap(),
-        ),
-    );
 
     async fn root_handler() -> impl IntoResponse {
         axum::response::Redirect::to("/holesky")

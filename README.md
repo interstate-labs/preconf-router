@@ -1,3 +1,8 @@
+[![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](docs.interstate.so)
+// [![Release](https://img.shields.io/github/v/release/Commit-Boost/commit-boost-client)](https://github.com/Commit-Boost/commit-boost-client/releases)
+[![Chat](https://img.shields.io/endpoint?color=neon&logo=telegram&label=chat&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2F%2BPcs9bykxK3BiMzk5)]([https://t.me/+Pcs9bykxK3BiMzk5](https://t.me/+-i4dP7U2BggxMzAx))
+[![X](https://img.shields.io/twitter/follow/Commit_Boost)](https://x.com/interstatefdn)
+
 ## Preconfirmation Router
 - To send a preconf request, navigate to the preconf-cli folder and run
   

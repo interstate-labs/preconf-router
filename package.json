@@ -1,0 +1,26 @@
+{
+  "name": "preconf-router",
+  "version": "1.0.0",
+  "description": "Preconfirmation Router",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "preconf-router": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/interstate-labs/preconf-router.git"
+  },
+  "author": "Irfan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/interstate-labs/preconf-router/issues"
+  },
+  "homepage": "https://github.com/interstate-labs/preconf-router#readme",
+  "dependencies": {
+    "commander": "^12.1.0"
+  }
+}

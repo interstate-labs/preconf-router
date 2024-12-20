@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mainnet Proposer Statistics</title>
+    <meta http-equiv="refresh" content="5">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .stats-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .proposer-section {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        .count {
+            font-weight: bold;
+            color: #666;
+        }
+        .bolt {
+            background-color: #e6f3ff;
+        }
+        .interstate {
+            background-color: #fff0e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="stats-card">
+        <h1>Mainnet Proposer Statistics</h1>
+        <div style="margin-bottom: 20px;">
+            <a href="/mainnet" style="margin-right: 20px;">Mainnet</a>
+            <a href="/holesky">Holesky</a>
+        </div>    
+        <h2>Available Aggregated Proposers || Last Updated: <span class="count">{{ timestamp }}</span></h2>
+        <h2>Total Proposers In Upcoming 32 Slots<span class="count">({{ bolt_proposers.len() + interstate_proposers.len()}})</span></h2>
+        
+        <div class="proposer-section">
+            <table>
+                <thead>
+                    <tr>
+                        <!-- <th>Type</th> enable to show which network proposers is under, not every network is on holesky rn--> 
+                        <th>Type</th>
+                        <th>Slot</th>
+                        <th>Validator Index</th>
+                        <th>URL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proposer in bolt_proposers %}
+                    <tr class="bolt">
+                        <td>Agg</td>
+                        <td>{{ proposer.slot }}</td>
+                        <td>{{ proposer.validator_index }}</td>
+                        <td>{{ proposer.sidecar_url }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% for proposer in interstate_proposers %}
+                    <tr class="interstate">
+                        <td>Agg</td>
+                        <td>{{ proposer.slot }}</td>
+                        <td>{{ proposer.validator_index }}</td>
+                        <td>{{ proposer.sidecar_url }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

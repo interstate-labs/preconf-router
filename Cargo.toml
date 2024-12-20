@@ -1,0 +1,37 @@
+[package]
+name = "temp"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = { version = "0.7", features = ["macros"] }
+tokio = { version = "1.0", features = ["full"] }
+axum-server = "0.7"
+dotenv = "0.15.0"
+serde = { version = "1.0", features = ["derive"] }
+config = "0.14.1"
+reqwest = { version = "0.12.9", features = ["json"] }
+serde_json = "1.0"
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
+thiserror = "2.0.0"
+tower = "0.5.1"
+tower-http = { version = "0.5.2", features = [
+	"cors",
+	"auth",
+	"trace",
+	"timeout",
+	"limit",
+	"set-header",
+  "fs"
+] }
+futures-util = "0.3.31"
+validator = "0.19.0"
+chrono = "0.4"
+tera = "1.19.1"
+
+# alloy
+alloy = { version = "0.2.0", features = ["full", "provider-trace-api", "rpc-types-beacon", "rpc-types-engine"] }
+
+# reth
+reth-primitives = { git = "https://github.com/paradigmxyz/reth", rev = "f55d43c" }
